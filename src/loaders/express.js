@@ -3,7 +3,7 @@ const cors = require("cors");
 
 const CONFIG = require("../constants/config");
 
-async function expressLoader(app) {
+function expressLoader(app) {
   app.use(
     cors({
       origin: CONFIG.CLIENT_URL,

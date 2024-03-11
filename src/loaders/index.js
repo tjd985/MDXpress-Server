@@ -1,10 +1,12 @@
-const mongooseLoader = require("./mongoose");
 const expressLoader = require("./express");
+const mongooseLoader = require("./mongoose");
+const routerLoader = require("./routers");
 const errorLoader = require("./error");
 
 const appLoader = async (app) => {
   await mongooseLoader();
-  await expressLoader(app);
+  expressLoader(app);
+  routerLoader(app);
   errorLoader(app);
 };
 

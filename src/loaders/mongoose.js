@@ -7,6 +7,7 @@ async function mongooseLoader() {
     await mongoose.connect(CONFIG.MONGODB_ENDPOINT, {
       DBName: "MDXpress",
     });
+    mongoose.set("autoIndex", true);
 
     console.log("connected to database");
   } catch (error) {

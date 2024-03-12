@@ -1,13 +1,14 @@
 const TemporaryUser = require("../models/TemporaryUser");
 
 async function deleteFromParent(next) {
-  const parentCollection = await TemporaryUser.findById(this.parendId);
-  const thisIndex = parentCollection.versions.findIndex(
-    (value) => value === this._id,
+  await TemporaryUser.findOneAndUpdate(
+    { _id: this.parendId },
+    {
+      $pull: {
+        versions: this._id,
+      },
+    },
   );
-
-  parentCollection.versions.splice(thisIndex, 1);
-  await parentCollection.save();
 
   next();
 }

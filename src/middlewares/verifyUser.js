@@ -31,8 +31,6 @@ async function verifyUser(req, res, next) {
       return;
     }
 
-    res.locals.temporaryUser = temporaryUser;
-
     next();
   } catch (err) {
     const customError = createError(

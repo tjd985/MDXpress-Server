@@ -1,42 +1,48 @@
+const mongoose = require("mongoose");
 const createError = require("http-errors");
 
 const TemporaryUser = require("../models/TemporaryUser");
 const Version = require("../models/Version");
 
-Version.watch().on("change", async (changedData) => {
-  if (changedData.operationType === "delete") {
-    const allUsers = await TemporaryUser.find();
-    const deletedVersionId = changedData.documentKey._id.toString();
-
-    for (const user of allUsers) {
-      user.versions.forEach((versionId, index) => {
-        if (versionId.toString() === deletedVersionId) {
-          user.versions.splice(index, 1);
-        }
-      });
-
-      await user.save();
-    }
-  }
-});
-
 const ERROR = require("../constants/error");
+require("../utils/changeStream");
 
 async function getCurrentVersionCode(req, res, next) {
-  const { version: targetVersion } = req.params;
-  const { temporaryUser } = res.locals;
+  const { id, version: targetVersion } = req.params;
 
   try {
-    const targetCode = temporaryUser
+    if (!mongoose.isValidObjectId(id) && id !== "first") {
+      res.json({
+        result: "Error",
+        status: ERROR.BAD_REQUEST.status,
+        message: ERROR.BAD_REQUEST.message,
+      });
+
+      return;
+    }
+
+    const temporaryUser = await TemporaryUser.findById(id);
+
+    if (!temporaryUser) {
+      res.json({
+        result: "Error",
+        status: ERROR.NOT_FOUND.status,
+        message: ERROR.NOT_FOUND.message,
+      });
+
+      return;
+    }
+
+    const result = await TemporaryUser.findById(id)
       .populate({
         path: "versions",
         match: {
           version: targetVersion,
         },
       })
-      .exec((err, result) => {
-        return result.versions[0].code;
-      });
+      .exec();
+
+    const targetCode = result.versions[0].code;
 
     res.json({
       result: "OK",
@@ -58,9 +64,17 @@ async function saveCode(req, res, next) {
   const { code } = req.body;
 
   try {
-    const temporaryUser = await TemporaryUser.findById(id);
+    if (!mongoose.isValidObjectId(id) && id !== "first") {
+      res.json({
+        result: "Error",
+        status: ERROR.BAD_REQUEST.status,
+        message: ERROR.BAD_REQUEST.message,
+      });
 
-    if (!temporaryUser) {
+      return;
+    }
+
+    if (id === "first") {
       const latestVersion = await Version.create({
         version: 0,
         code,
@@ -75,6 +89,18 @@ async function saveCode(req, res, next) {
         result: "OK",
         status: 200,
         content: latestVersion,
+      });
+
+      return;
+    }
+
+    const temporaryUser = await TemporaryUser.findById(id);
+
+    if (!temporaryUser) {
+      res.json({
+        result: "Error",
+        status: ERROR.NOT_FOUND.status,
+        message: ERROR.NOT_FOUND.message,
       });
 
       return;

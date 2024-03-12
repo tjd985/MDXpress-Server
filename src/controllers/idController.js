@@ -3,6 +3,23 @@ const createError = require("http-errors");
 const TemporaryUser = require("../models/TemporaryUser");
 const Version = require("../models/Version");
 
+Version.watch().on("change", async (changedData) => {
+  if (changedData.operationType === "delete") {
+    const allUsers = await TemporaryUser.find();
+    const deletedVersionId = changedData.documentKey._id.toString();
+
+    for (const user of allUsers) {
+      user.versions.forEach((versionId, index) => {
+        if (versionId.toString() === deletedVersionId) {
+          user.versions.splice(index, 1);
+        }
+      });
+
+      await user.save();
+    }
+  }
+});
+
 const ERROR = require("../constants/error");
 
 async function getCurrentVersionCode(req, res, next) {
@@ -44,16 +61,14 @@ async function saveCode(req, res, next) {
     const temporaryUser = await TemporaryUser.findById(id);
 
     if (!temporaryUser) {
-      const newTemporayUser = await TemporaryUser.create();
-
       const latestVersion = await Version.create({
-        parentId: newTemporayUser._id,
         version: 0,
         code,
-        createdAt: Date.now(),
       });
 
-      newTemporayUser.versions.push(latestVersion._id);
+      const newTemporayUser = await TemporaryUser.create({
+        versions: latestVersion._id,
+      });
       await newTemporayUser.save();
 
       res.json({
@@ -65,10 +80,16 @@ async function saveCode(req, res, next) {
       return;
     }
 
-    const userVersionList = await temporaryUser.populate("versions").versions;
+    const userInformation = await TemporaryUser.findById(id)
+      .populate("versions")
+      .exec();
+
+    const userVersionList = userInformation.versions;
+
     const versionNumberList = userVersionList.map((versionObject) => {
       return versionObject.version;
     });
+
     const currentLatestVersion = Math.max(...versionNumberList);
 
     const latestVersion = await Version.create({

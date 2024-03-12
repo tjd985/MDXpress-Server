@@ -6,8 +6,6 @@ const TemporaryUserSchema = new Schema({
   versions: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      require: true,
-      default: {},
       ref: "Version",
     },
   ],

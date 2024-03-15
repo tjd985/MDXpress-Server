@@ -58,15 +58,18 @@ async function saveCode(req, res, next) {
         code,
       });
 
-      const newTemporayUser = await TemporaryUser.create({
+      const newTemporaryUser = await TemporaryUser.create({
         versions: latestVersion._id,
       });
-      await newTemporayUser.save();
+      await newTemporaryUser.save();
 
       res.json({
         result: "OK",
         status: 200,
-        content: latestVersion,
+        content: {
+          latestVersion,
+          temporaryUser: newTemporaryUser,
+        },
       });
 
       return;
@@ -108,7 +111,10 @@ async function saveCode(req, res, next) {
     res.json({
       result: "OK",
       status: 200,
-      content: latestVersion,
+      content: {
+        latestVersion,
+        temporaryUser,
+      },
     });
   } catch (err) {
     const customError = createError(

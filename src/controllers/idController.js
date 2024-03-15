@@ -11,28 +11,6 @@ async function getCurrentVersionCode(req, res, next) {
   const { id, version: targetVersion } = req.params;
 
   try {
-    if (!mongoose.isValidObjectId(id) && id !== "first") {
-      res.json({
-        result: "Error",
-        status: ERROR.BAD_REQUEST.status,
-        message: ERROR.BAD_REQUEST.message,
-      });
-
-      return;
-    }
-
-    const temporaryUser = await TemporaryUser.findById(id);
-
-    if (!temporaryUser) {
-      res.json({
-        result: "Error",
-        status: ERROR.NOT_FOUND.status,
-        message: ERROR.NOT_FOUND.message,
-      });
-
-      return;
-    }
-
     const result = await TemporaryUser.findById(id)
       .populate({
         path: "versions",

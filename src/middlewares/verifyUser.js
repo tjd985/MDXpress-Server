@@ -4,15 +4,26 @@ const createError = require("http-errors");
 const TemporaryUser = require("../models/TemporaryUser");
 
 const ERROR = require("../constants/error");
+const CONSTANTS = require("../constants/constants");
 
 async function verifyUser(req, res, next) {
   const { id } = req.params;
 
-  if (!isValidObjectId(id)) {
+  if (!isValidObjectId(id) && id !== "first") {
     res.json({
       result: "error",
       status: ERROR.BAD_REQUEST.status,
       message: ERROR.BAD_REQUEST.message,
+    });
+
+    return;
+  }
+
+  if (id === "first") {
+    res.json({
+      result: "OK",
+      status: 200,
+      content: CONSTANTS.BOILER_PLATE_CODE,
     });
 
     return;

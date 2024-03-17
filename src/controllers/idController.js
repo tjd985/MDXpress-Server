@@ -5,7 +5,7 @@ const TemporaryUser = require("../models/TemporaryUser");
 const Version = require("../models/Version");
 
 const ERROR = require("../constants/error");
-require("../utils/changeStream");
+require("../services/changeStream");
 
 async function getCurrentVersionCode(req, res, next) {
   const { id, version: targetVersion } = req.params;

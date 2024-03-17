@@ -18,7 +18,7 @@ async function getBundledPackageCode(req, res, next) {
 
     if (stderr) {
       res.json({
-        result: "ERROR",
+        result: "Error",
         status: ERROR_PATTERNS.BAD_REQUEST.status,
         message: ERROR_PATTERNS.BAD_REQUEST.message,
       });

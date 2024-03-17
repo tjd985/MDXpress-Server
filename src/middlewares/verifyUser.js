@@ -11,7 +11,7 @@ async function verifyUser(req, res, next) {
 
   if (!isValidObjectId(id) && id !== "first") {
     res.json({
-      result: "error",
+      result: "Error",
       status: ERROR.BAD_REQUEST.status,
       message: ERROR.BAD_REQUEST.message,
     });
@@ -34,7 +34,7 @@ async function verifyUser(req, res, next) {
 
     if (!temporaryUser) {
       res.json({
-        result: "error",
+        result: "Error",
         status: ERROR.NOT_FOUND.status,
         message: ERROR.NOT_FOUND.message,
       });

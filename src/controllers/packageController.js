@@ -31,7 +31,7 @@ async function getBundledPackageCode(req, res, next) {
         __dirname,
         "../../",
         "dist",
-        "packageBundle.js",
+        `${packageName}.js`,
       );
 
       const bundledPackageCode = fs.readFileSync(bundleCodePath, {

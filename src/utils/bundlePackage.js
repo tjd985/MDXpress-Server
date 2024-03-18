@@ -1,7 +1,7 @@
 const webpack = require("webpack");
 const path = require("path");
 
-async function bundlePackage(entryPointPath) {
+async function bundlePackage(packageName, entryPointPath) {
   return new Promise((resolve, reject) => {
     webpack(
       {
@@ -9,7 +9,7 @@ async function bundlePackage(entryPointPath) {
         entry: entryPointPath,
         output: {
           path: path.resolve(__dirname, "../../", "dist"),
-          filename: "packageBundle.js",
+          filename: `${packageName}.js`,
           libraryTarget: "umd",
         },
       },

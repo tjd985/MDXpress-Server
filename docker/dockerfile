@@ -7,6 +7,6 @@ COPY ./getBundleCode.js ./
 COPY ./getEntryPointPath.js ./
 COPY ./docker-package.json ./package.json
 
-CMD ["node", "getBundleCode.js"]
-
 RUN npm install
+
+ENTRYPOINT ["node", "getBundleCode.js"]

@@ -1,0 +1,12 @@
+{
+  "name": "mdxpress-docker",
+  "version": "0.0.0",
+  "private": true,
+  "description": "package bundling in docker container",
+  "scripts": {
+    "bundle": "node getBundleCode.js"
+  },
+  "dependencies": {
+    "webpack": "^5.90.3"
+  }
+}

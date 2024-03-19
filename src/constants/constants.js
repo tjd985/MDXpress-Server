@@ -13,7 +13,7 @@ const CONSTANTS = {
     "  </span>\n" +
     ");\n" +
     "\n" +
-    '# Welcomde to <Highlight color="#25c2a0">MDXpress!</Highlight>\n' +
+    '# Welcome to <Highlight color="#25c2a0">MDXpress!</Highlight>\n' +
     "- Feel free to write code using MDX syntax in the editor on the left!<br/>\n" +
     '- We display a <Highlight color="#1877F2">**_real-time preview_**</Highlight> on the right.<br/>\n' +
     '- Press <Highlight color="#1877F2">cmd + s</Highlight> to save your current code, and you can share it with others via a link!\n' +

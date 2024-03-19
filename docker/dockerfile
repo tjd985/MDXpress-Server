@@ -2,9 +2,9 @@ FROM node:current-alpine
 
 WORKDIR /app
 
-COPY ./bundlePackage.js ./
-COPY ./getBundleCode.js ./
-COPY ./getEntryPointPath.js ./
+COPY ./utils/bundlePackage.js ./
+COPY ./utils/getBundleCode.js ./
+COPY ./utils/getEntryPointPath.js ./
 COPY ./docker-package.json ./package.json
 
 RUN npm install

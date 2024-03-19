@@ -1,5 +1,3 @@
-const fs = require("node:fs");
-const path = require("path");
 const util = require("util");
 const exec = util.promisify(require("node:child_process").exec);
 const createError = require("http-errors");
@@ -7,14 +5,13 @@ const createError = require("http-errors");
 const ERROR = require("../constants/error");
 const ERROR_PATTERNS = require("../constants/error");
 
-const getEntryPointPath = require("../utils/getEntryPointPath");
-const bundlePackage = require("../utils/bundlePackage");
-
 async function getBundledPackageCode(req, res, next) {
   const { package: packageName } = req.params;
 
   try {
-    const { stderr } = await exec(`npm install ${packageName}`);
+    const dockerCommand = `docker run --rm mdxpress-docker ${packageName} sh -c "cat /${packageName}.js" `;
+
+    const { stdout: bundledPackageCode, stderr } = await exec(dockerCommand);
 
     if (stderr) {
       res.json({
@@ -24,25 +21,10 @@ async function getBundledPackageCode(req, res, next) {
       });
     }
 
-    const entryPointPath = getEntryPointPath(packageName);
-
-    bundlePackage(packageName, entryPointPath).then(() => {
-      const bundleCodePath = path.resolve(
-        __dirname,
-        "../../",
-        "dist",
-        `${packageName}.js`,
-      );
-
-      const bundledPackageCode = fs.readFileSync(bundleCodePath, {
-        encoding: "utf8",
-      });
-
-      res.json({
-        result: "OK",
-        status: 200,
-        content: bundledPackageCode,
-      });
+    res.json({
+      result: "OK",
+      status: 200,
+      content: bundledPackageCode,
     });
   } catch (err) {
     const customError = createError(

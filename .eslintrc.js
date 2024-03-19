@@ -32,5 +32,6 @@ module.exports = {
     "no-await-in-loop": "off",
     "no-shadow": "off",
     "import/no-extraneous-dependencies": "off",
+    "prefer-destructuring": "off",
   },
 };

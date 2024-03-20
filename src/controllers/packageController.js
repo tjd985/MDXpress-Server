@@ -9,9 +9,13 @@ async function getBundledPackageCode(req, res, next) {
   const { package: packageName } = req.params;
 
   try {
-    const dockerCommand = `docker run --rm mdxpress-docker ${packageName} sh -c "cat /${packageName}.js" `;
+    const dockerCommand = `docker run --rm mdxpress-docker ${packageName} sh -c cat /${packageName}.js`;
 
-    const { stdout: bundledPackageCode, stderr } = await exec(dockerCommand);
+    const { stdout: commandResult, stderr } = await exec(dockerCommand);
+    const newLineIndex = commandResult.indexOf("\n");
+
+    const packageInformation = commandResult.slice(0, newLineIndex);
+    const bundledPackageCode = commandResult.slice(newLineIndex);
 
     if (stderr) {
       res.json({
@@ -24,7 +28,10 @@ async function getBundledPackageCode(req, res, next) {
     res.json({
       result: "OK",
       status: 200,
-      content: bundledPackageCode,
+      content: {
+        packageInformation,
+        bundledPackageCode,
+      },
     });
   } catch (err) {
     const customError = createError(

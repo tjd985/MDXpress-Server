@@ -23,7 +23,10 @@ async function verifyUser(req, res, next) {
     res.json({
       result: "OK",
       status: 200,
-      content: CONSTANTS.BOILER_PLATE_CODE,
+      content: {
+        targetCode: CONSTANTS.BOILER_PLATE_CODE,
+        bundleCodeList: [],
+      },
     });
 
     return;

@@ -17,6 +17,8 @@ function getEntryPointPath(packageName) {
     packageJson.main || "index.js",
   );
 
+  console.log(`${packageJson.name} ${packageJson.version}`);
+
   return entryPointPath;
 }
 

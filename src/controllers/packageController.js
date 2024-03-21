@@ -9,7 +9,7 @@ async function getBundledPackageCode(req, res, next) {
   const { package: packageName } = req.params;
 
   try {
-    const dockerCommand = `docker run --rm mdxpress-docker ${packageName} sh -c cat /${packageName}.js`;
+    const dockerCommand = `docker run --rm tjd985/mdxpress-docker:1.0 ${packageName} sh -c cat /${packageName}.js`;
 
     const { stdout: commandResult, stderr } = await exec(dockerCommand);
     const newLineIndex = commandResult.indexOf("\n");

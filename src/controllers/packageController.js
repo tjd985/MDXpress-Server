@@ -23,6 +23,8 @@ async function getBundledPackageCode(req, res, next) {
         status: ERROR_PATTERNS.BAD_REQUEST.status,
         message: ERROR_PATTERNS.BAD_REQUEST.message,
       });
+
+      return;
     }
 
     res.json({

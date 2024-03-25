@@ -24,7 +24,7 @@ describe("idController 테스트", () => {
     it("id와 version값이 first일 경우에는 보일러 플레이트를 제공해야 합니다.", async () => {
       const response = await request(server).get("/id/first/version/first");
 
-      expect(response.statusCode).toBe(200);
+      expect(response.statusCode).toEqual(200);
       expect(response.body.content.targetCode).toEqual(
         CONSTANTS.BOILER_PLATE_CODE,
       );
@@ -38,7 +38,7 @@ describe("idController 테스트", () => {
       );
 
       expect(response.body.result).toEqual("Error");
-      expect(response.body.status).toBe(400);
+      expect(response.body.status).toEqual(400);
       expect(response.body.message).toEqual("Bad Request");
     });
   });
@@ -69,7 +69,7 @@ describe("idController 테스트", () => {
       const response = await request(server).get(`/id/${mockUserId}/version/0`);
 
       expect(response.body.result).toEqual("OK");
-      expect(response.body.status).toBe(200);
+      expect(response.body.status).toEqual(200);
       expect(response.body.content.targetCode).toEqual("savedCode");
     });
   });

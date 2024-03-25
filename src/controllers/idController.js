@@ -39,6 +39,8 @@ async function getCurrentVersionCode(req, res, next) {
           );
 
           next(customError);
+
+          return;
         }
 
         const newLineIndex = commandResult.indexOf("\n");

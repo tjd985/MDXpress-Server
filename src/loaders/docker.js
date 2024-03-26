@@ -3,7 +3,7 @@ const exec = util.promisify(require("node:child_process").exec);
 
 async function getDockerImage() {
   try {
-    await exec("sudo docker pull tjd985/mdxpress-docker:latest");
+    await exec("docker pull tjd985/mdxpress-docker:latest");
 
     console.log("Docker image loaded successfully");
   } catch (err) {

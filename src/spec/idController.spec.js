@@ -1,10 +1,12 @@
 const request = require("supertest");
 
+const mongoose = require("mongoose");
 const server = require("../../app");
-const TemporaryUser = require("../models/TemporaryUser");
-const Version = require("../models/Version");
 const { setupDB } = require("./testSetup");
 const CONSTANTS = require("../constants/constants");
+
+const TemporaryUser = require("../models/TemporaryUser");
+const Version = require("../models/Version");
 
 jest.mock("../models/TemporaryUser");
 jest.mock("../models/Version");
@@ -12,10 +14,6 @@ jest.mock("../models/Version");
 setupDB();
 
 beforeEach(() => {
-  jest.clearAllMocks();
-});
-
-afterEach(() => {
   jest.clearAllMocks();
 });
 
@@ -49,6 +47,8 @@ describe("idController 테스트", () => {
       const mockExec = jest.fn();
       const mockPopulate = jest.fn().mockReturnValue({ exec: mockExec });
 
+      mongoose.isValidObjectId = jest.fn(() => true);
+
       mockExec.mockImplementation(() => {
         return Promise.resolve({
           versions: [
@@ -56,7 +56,7 @@ describe("idController 테스트", () => {
               _id: "65fe778af093b89c8a25922a",
               version: 0,
               code: "savedCode",
-              packageList: [{ "ladash 1.0": "bundledCode" }],
+              packageList: [],
             },
           ],
         });

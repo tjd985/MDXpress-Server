@@ -23,11 +23,11 @@ async function getCurrentVersionCode(req, res, next) {
       })
       .exec();
 
-    const currnetVersionPackageList = result.versions[0].packageList;
+    const currentVersionPackageList = result.versions[0].packageList;
     const bundleCodeList = [];
 
-    for (const packageName in currnetVersionPackageList) {
-      if (isOwnProperty(currnetVersionPackageList, packageName)) {
+    for (const packageName in currentVersionPackageList) {
+      if (isOwnProperty(currentVersionPackageList, packageName)) {
         const dockerCommand = `docker run --rm tjd985/mdxpress-docker:latest ${packageName} sh -c cat /${packageName}.js`;
 
         const { stdout: commandResult, stderr } = await exec(dockerCommand);
